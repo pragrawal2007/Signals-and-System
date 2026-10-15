@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SER Project Roadmap</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7fb;--card:#fff;--text:#1b1f2a;--muted:#5d6577;--line:#dfe3ee;--accent:#4f46e5;
+--p1:#0ea5e9;--p2:#10b981;--p3:#f59e0b;--p4:#8b5cf6;--p5:#ef4444}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10131c;--card:#1a1f2c;--text:#eceef5;--muted:#9aa3b8;--line:#2a3142;--accent:#818cf8}}
+:root[data-theme="dark"]{--bg:#10131c;--card:#1a1f2c;--text:#eceef5;--muted:#9aa3b8;--line:#2a3142;--accent:#818cf8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);margin:0 0 6px;line-height:1.2}
+.sub{color:var(--muted);margin:0 0 20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.85rem}
+.flow{display:flex;gap:6px;overflow-x:auto;padding:4px 0 14px;align-items:center}
+.flow span{white-space:nowrap;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.82rem}
+.flow i{color:var(--muted);font-style:normal}
+.bar{height:8px;background:var(--line);border-radius:8px;margin:6px 0 4px;overflow:hidden}
+.bar div{height:100%;width:0;background:var(--accent);transition:width .3s}
+.prog{font-size:.85rem;color:var(--muted);margin-bottom:18px}
+.phase{margin:30px 0 10px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem}
+.phase b{width:12px;height:12px;border-radius:50%;display:inline-block}
+.stage{position:relative;margin:0 0 12px 14px;padding-left:22px;border-left:3px solid var(--c)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0}
+summary{cursor:pointer;list-style:none;padding:12px 14px;display:flex;gap:10px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.t{flex:1;font-weight:600}
+.t small{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+.done{flex:none;display:flex;align-items:center;gap:5px;font-size:.78rem;color:var(--muted)}
+.body{padding:2px 16px 14px;border-top:1px solid var(--line);font-size:.92rem}
+.body h4{margin:12px 0 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.body ul{margin:0;padding-left:18px}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;overflow-x:auto;white-space:nowrap}
+.tbl{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:.9rem;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--bg)}
+.final{margin-top:28px;padding:16px;border-radius:12px;background:var(--card);border:2px solid var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Speech Emotion Recognition</h1>
+<p class="sub">Attention-Based CNN-LSTM with Optimal Feature Selection &mdash; Project Roadmap</p>
+<div class="chips" id="emo"></div>
+<div class="flow" id="flow"></div>
+<div class="bar"><div id="fill"></div></div>
+<div class="prog" id="prog">0 of 12 stages done &middot; tick the box on a stage to track progress</div>
+<div id="stages"></div>
+
+<div class="final">
+<b>Final outcome</b>
+<div class="flow" id="flow2" style="padding-bottom:0"></div>
+</div>
+</div>
+
+<script>
+const emotions=["Happy","Sad","Angry","Neutral","Fear","Disgust","Surprise","Calm"];
+const flow=["Audio Signal","Signal Processing","Feature Extraction","Feature Selection","Deep Learning Model","Attention","Emotion Prediction"];
+const mk=(a)=>a.map((x,i)=>`<span>${x}</span>${i<a.length-1?"<i>&rarr;</i>":""}`).join("");
+document.getElementById("emo").innerHTML=emotions.map(e=>`<span class="chip">${e}</span>`).join("");
+document.getElementById("flow").innerHTML=mk(flow);
+document.getElementById("flow2").innerHTML=mk(["Human Voice","Signal Processing","Feature Extraction","Optimal Feature Selection","CNN-LSTM-Attention","Emotion Prediction"]);
+
+const phases=[
+{n:"Phase 1 · Signal Foundations",c:"var(--p1)",s:[
+{t:"Understanding Audio Signals",g:"Understand how computers represent human speech.",
+ learn:["Audio signal; continuous vs discrete","Amplitude, time-domain, waveform","Sampling, sampling rate, sampling period"],
+ work:["Load .wav files","Visualize waveform","See audio as numerical samples"],
+ tools:"Python · NumPy · Librosa · Matplotlib",flow:"Voice → Microphone → Digital samples → Waveform"},
+{t:"Frequency Analysis of Speech",g:"Understand the frequency characteristics of speech.",
+ learn:["Frequency; time vs frequency domain","Fourier Transform, FFT","Magnitude spectrum"],
+ work:["Waveform → FFT → Frequency spectrum","Analyze dominant frequencies","Energy distribution & speech components"]},
+{t:"Time-Frequency Analysis",g:"Speech changes over time — it is not stationary.",
+ learn:["STFT, windowing, frames","Spectrogram"],
+ work:["Audio → STFT → Spectrogram","Read axes: X = time, Y = frequency, colour = energy"]}]},
+{n:"Phase 2 · Features & Data",c:"var(--p2)",s:[
+{t:"Speech Feature Extraction",g:"Convert audio into meaningful numbers.",
+ learn:["MFCC (most important): Mel scale, filter bank, cepstrum, coefficients","Delta MFCC: speech dynamics, rate of change","Mel Spectrogram: for CNN models","Chroma: pitch & harmonic information"],
+ work:["Audio → MFCC → Feature vector"]},
+{t:"Dataset Creation",g:"Build the training dataset.",
+ learn:["Primary: RAVDESS (multiple actors & emotions)","Secondary: TESS (extra train/test)"],
+ work:["Per file: load → extract → store → attach label","Classical ML: Samples × Features (e.g. 5000 × 40)","Deep learning: Samples × MFCC × Time (e.g. 5000 × 40 × 200)"]}]},
+{n:"Phase 3 · Baselines & Feature Selection",c:"var(--p3)",s:[
+{t:"Machine Learning Baseline",g:"Build a simple baseline before deep learning.",
+ learn:["Train/test split, feature scaling","Overfitting vs underfitting"],
+ work:["Logistic Regression, Decision Tree, Random Forest, SVM","Evaluate: Accuracy, Precision, Recall, F1, Confusion Matrix"]},
+{t:"Reproduce Research Paper Baseline",g:"Implement the selected paper's approach.",
+ learn:["Pipeline: Audio → MFCC/Mel/Chroma → CNN → Emotion"],
+ work:["Compare MFCC, Delta MFCC, Chroma, Mel Spectrogram & combinations","Measure accuracy, training time, model complexity"]},
+{t:"Feature Selection",g:"Find the best feature combination instead of using everything blindly.",
+ learn:["Compare accuracy, F1-score, computation cost"],
+ work:["MFCC only","MFCC + Delta","MFCC + Mel Spectrogram","MFCC + Chroma","All features","→ Select the optimal feature set"]}]},
+{n:"Phase 4 · Deep Learning Core",c:"var(--p4)",s:[
+{t:"CNN-LSTM Hybrid Model",g:"CNN learns local patterns; LSTM learns temporal relationships.",
+ learn:["CNN: frequency patterns, spectral structures","LSTM: Frame1 → Frame2 → Frame3 → Frame4"],
+ work:["MFCC sequence → CNN → Feature extraction → LSTM → Emotion classification"]},
+{t:"Attention Mechanism",g:"Not every frame carries equal emotional information.",
+ learn:["Silence frame → low importance; emotion-rich frame → high importance","Example weights: frame 1 → 0.1, frame 50 → 0.9, frame 120 → 0.7"],
+ work:["CNN → LSTM → Attention layer → Classifier → Emotion"]}]},
+{n:"Phase 5 · Robustness & Evaluation",c:"var(--p5)",s:[
+{t:"Noise Robustness",g:"Make the system work in real environments.",
+ learn:["Noise, signal degradation, filtering","Noise reduction, filters, signal enhancement"],
+ work:["Add background noise & low-quality recordings","Noisy audio → Noise reduction → Features → Prediction"]},
+{t:"Final Model Evaluation",g:"Compare all approaches side by side.",table:true}]}
+];
+
+const rows=[["Decision Tree","MFCC"],["Random Forest","MFCC"],["SVM","MFCC"],["CNN","MFCC / Mel"],["CNN-LSTM","MFCC"],["CNN-LSTM-Attention","Selected Features"]];
+const list=(a)=>`<ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+let idx=0,html="";
+phases.forEach(p=>{
+ html+=`<div class="phase"><b style="background:${p.c}"></b>${p.n}</div>`;
+ p.s.forEach(s=>{
+  idx++;
+  let b=`<div class="body">`;
+  if(s.learn)b+=`<h4>Concepts to learn</h4>${list(s.learn)}`;
+  if(s.work)b+=`<h4>Practical work</h4>${list(s.work)}`;
+  if(s.tools)b+=`<h4>Tools</h4><div>${s.tools}</div>`;
+  if(s.flow)b+=`<h4>Output</h4><div class="code">${s.flow}</div>`;
+  if(s.table)b+=`<div class="tbl"><table><tr><th>Model</th><th>Features</th><th>Accuracy</th><th>F1 Score</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>&nbsp;</td><td>&nbsp;</td></tr>`).join("")}</table></div>`;
+  b+=`</div>`;
+  html+=`<div class="stage" style="--c:${p.c}"><details class="card" ${idx===1?"open":""}><summary><span class="num">${idx}</span><span class="t">${s.t}<small>${s.g}</small></span><label class="done" onclick="event.stopPropagation()"><input type="checkbox" class="cb" data-i="${idx}"> done</label></summary>${b}</details></div>`;
+ });
+});
+document.getElementById("stages").innerHTML=html;
+function upd(){const c=document.querySelectorAll(".cb:checked").length;
+ document.getElementById("fill").style.width=(c/12*100)+"%";
+ document.getElementById("prog").textContent=c+" of 12 stages done · tick the box on a stage to track progress";}
+document.querySelectorAll(".cb").forEach(x=>x.addEventListener("change",upd));
+</script>
+</body>
+</html>
